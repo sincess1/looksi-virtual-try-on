@@ -20,12 +20,6 @@ export function VisualStage() {
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (reducedMotion || event.pointerType !== "mouse") return;
 
-    if ((event.target as HTMLElement).closest(".compare-frame")) {
-      rotateX.set(0);
-      rotateY.set(0);
-      return;
-    }
-
     const bounds = event.currentTarget.getBoundingClientRect();
     const x = (event.clientX - bounds.left) / bounds.width - 0.5;
     const y = (event.clientY - bounds.top) / bounds.height - 0.5;

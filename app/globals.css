@@ -361,7 +361,9 @@ input:focus-visible {
   overflow: hidden;
   border: 1px solid rgba(116, 66, 28, 0.18);
   border-radius: 999px;
-  background: linear-gradient(112deg, #97571f 0%, #b97130 50%, #ce9148 100%);
+  background: linear-gradient(112deg, #97571f 0%, #b97130 48%, #ce9148 100%);
+  background-size: 140% 100%;
+  background-position: 0% 50%;
   padding: 0.5rem 3.8rem;
   color: #fff9ee;
   font-size: 1rem;
@@ -371,9 +373,10 @@ input:focus-visible {
     0 16px 38px rgba(137, 76, 28, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.24);
   transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    background 180ms ease;
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 260ms ease,
+    background-position 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 260ms ease;
 }
 
 .primary-action::before {
@@ -389,24 +392,18 @@ input:focus-visible {
 
 .primary-action::after {
   position: absolute;
-  top: -70%;
-  left: -18%;
+  inset: 1px;
   z-index: 0;
-  width: 12%;
-  height: 240%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 231, 190, 0.22),
-    transparent
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at 78% 0%,
+    rgba(255, 236, 202, 0.24),
+    transparent 38%
   );
   content: "";
   opacity: 0;
   pointer-events: none;
-  transform: rotate(16deg) translateX(-260%);
-  transition:
-    transform 680ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 180ms ease;
+  transition: opacity 260ms ease;
 }
 
 .primary-action > * {
@@ -415,16 +412,16 @@ input:focus-visible {
 }
 
 .primary-action:hover:not(:disabled) {
-  background: linear-gradient(112deg, #a76224 0%, #bf7c36 50%, #d79c52 100%);
+  background-position: 100% 50%;
   box-shadow:
-    0 20px 44px rgba(137, 76, 28, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28);
-  transform: translateY(-2px);
+    0 19px 42px rgba(137, 76, 28, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  filter: saturate(1.04) brightness(1.025);
+  transform: translateY(-1px);
 }
 
 .primary-action:hover:not(:disabled)::after {
   opacity: 1;
-  transform: rotate(16deg) translateX(980%);
 }
 
 .primary-action:active:not(:disabled) {
@@ -449,6 +446,14 @@ input:focus-visible {
   background: rgba(62, 34, 18, 0.16);
   color: #fff9ee;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 260ms ease;
+}
+
+.primary-action:hover:not(:disabled) .primary-action-icon {
+  background: rgba(62, 34, 18, 0.23);
+  transform: translate(1px, -1px);
 }
 
 .primary-action-label {
@@ -651,6 +656,47 @@ input:focus-visible {
   object-fit: cover;
 }
 
+.processing-visual {
+  width: 20rem;
+  height: 16rem;
+  margin-bottom: 2.5rem;
+}
+
+.processing-layout {
+  isolation: isolate;
+}
+
+.processing-drape {
+  position: absolute;
+  top: 1%;
+  left: 50%;
+  z-index: -1;
+  width: min(72rem, 145vw);
+  aspect-ratio: 1.5;
+  background: url("/looksi-processing-drape.webp") center / contain no-repeat;
+  filter: blur(0.4px) saturate(0.72);
+  opacity: 0.13;
+  pointer-events: none;
+  transform: translateX(-50%) rotate(-3deg);
+  animation: processing-drape-drift 12s ease-in-out infinite alternate;
+}
+
+.processing-photo-person,
+.processing-photo-product {
+  width: 10rem;
+  height: 13rem;
+}
+
+.processing-photo-person {
+  top: 1.25rem;
+  left: 0.5rem;
+}
+
+.processing-photo-product {
+  right: 0.5rem;
+  bottom: 0.5rem;
+}
+
 .processing-core {
   position: relative;
   display: flex;
@@ -693,7 +739,9 @@ input:focus-visible {
     transparent 62%
   );
   filter: blur(12px);
-  animation: processing-glass-light 7s ease-in-out infinite alternate;
+  opacity: 0.68;
+  transform-origin: center;
+  animation: processing-glass-orbit 14s linear infinite;
 }
 
 .processing-core::after {
@@ -827,7 +875,7 @@ input:focus-visible {
     rgba(184, 117, 49, 0.78)
   );
   background-size: 200% 100%;
-  animation: processing-flow 1.8s ease-in-out infinite alternate;
+  animation: processing-flow 1.55s linear infinite alternate;
 }
 
 .processing-step[data-state="complete"] {
@@ -876,15 +924,15 @@ input:focus-visible {
   }
 }
 
-@keyframes processing-glass-light {
-  from {
-    opacity: 0.45;
-    transform: translate(-8%, -5%) rotate(0deg);
-  }
-
+@keyframes processing-glass-orbit {
   to {
-    opacity: 0.72;
-    transform: translate(8%, 5%) rotate(70deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes processing-drape-drift {
+  to {
+    transform: translate(-50%, -1.2rem) rotate(1deg) scale(1.025);
   }
 }
 
@@ -924,6 +972,8 @@ input:focus-visible {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  clip-path: inset(0 0 0 var(--compare-position, 54%));
+  will-change: clip-path;
 }
 
 .compare-after img {
@@ -962,12 +1012,14 @@ input:focus-visible {
   position: absolute;
   z-index: 20;
   inset-block: 0;
+  left: var(--compare-position, 54%);
   width: 1px;
   background: rgba(255, 255, 255, 0.94);
   box-shadow:
     0 0 10px rgba(72, 39, 17, 0.28),
     0 0 24px rgba(232, 181, 102, 0.38);
   pointer-events: none;
+  will-change: left;
 }
 
 .compare-handle {
@@ -975,27 +1027,48 @@ input:focus-visible {
   top: 50%;
   left: 50%;
   display: flex;
-  width: 3.7rem;
-  height: 3.7rem;
+  width: 3.2rem;
+  height: 3.2rem;
   align-items: center;
   justify-content: center;
   gap: 0.48rem;
-  border: 1px solid rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(255, 255, 255, 0.62);
   border-radius: 50%;
-  background: rgba(43, 29, 21, 0.72);
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.28), transparent 34%),
+    linear-gradient(145deg, rgba(55, 38, 27, 0.66), rgba(73, 48, 30, 0.4));
   box-shadow:
-    0 10px 28px rgba(45, 26, 14, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(14px);
+    0 9px 24px rgba(45, 26, 14, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -8px 16px rgba(88, 51, 24, 0.14);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
   transform: translate(-50%, -50%);
 }
 
-.compare-handle::before {
-  position: absolute;
-  inset: -0.58rem;
-  border: 1px solid rgba(255, 255, 255, 0.17);
-  border-radius: 50%;
-  content: "";
+.compare-frame-awaiting-interaction .compare-handle {
+  animation: compare-invitation 1.25s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@keyframes compare-invitation {
+  0%,
+  100% {
+    box-shadow:
+      0 9px 24px rgba(45, 26, 14, 0.2),
+      0 0 0 0 rgba(225, 166, 84, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -8px 16px rgba(88, 51, 24, 0.14);
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  48% {
+    box-shadow:
+      0 16px 34px rgba(45, 26, 14, 0.34),
+      0 0 0 0.8rem rgba(225, 166, 84, 0),
+      inset 0 1px 0 rgba(255, 255, 255, 0.42),
+      inset 0 -8px 16px rgba(88, 51, 24, 0.1);
+    transform: translate(-50%, -50%) scale(1.22);
+  }
 }
 
 .compare-arrow {
@@ -1037,23 +1110,39 @@ input:focus-visible {
 }
 
 .compare-frame-hero .compare-handle {
-  width: 3.45rem;
-  height: 3.45rem;
+  width: 2.8rem;
+  height: 2.8rem;
 }
 
 .result-layout {
   display: grid;
+  isolation: isolate;
   min-height: calc(100dvh - 90px);
   width: 100%;
   max-width: 76rem;
   grid-template-areas:
     "copy"
     "visual"
+    "guidance"
     "actions";
   gap: 2rem;
   align-items: center;
   margin: 0 auto;
   padding: 1rem 1.25rem 3rem;
+}
+
+.result-drape {
+  position: absolute;
+  top: -2.5rem;
+  left: 50%;
+  z-index: -1;
+  width: min(34rem, 138vw);
+  height: 18rem;
+  background: url("/looksi-drape.webp") center / contain no-repeat;
+  filter: saturate(0.72);
+  opacity: 0.17;
+  pointer-events: none;
+  transform: translateX(-50%) rotate(-7deg);
 }
 
 .result-copy {
@@ -1100,9 +1189,16 @@ input:focus-visible {
   text-wrap: balance;
 }
 
-.result-description {
+.result-guidance {
+  width: 100%;
   max-width: 32rem;
-  margin: 1.25rem auto 0;
+  grid-area: guidance;
+  margin: -0.75rem auto 0;
+  text-align: center;
+}
+
+.result-description {
+  margin: 0;
   color: #75685e;
   font-size: 0.9rem;
   line-height: 1.75;
@@ -1115,8 +1211,8 @@ input:focus-visible {
   margin: 0 auto;
 }
 
-.result-visual > p {
-  margin: 0.8rem 0 0;
+.result-drag-hint {
+  margin: 0.65rem 0 0;
   color: #817064;
   font-size: 0.72rem;
   text-align: center;
@@ -1206,7 +1302,7 @@ input:focus-visible {
   color: #9a642f;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 767px) {
   body {
     background:
       radial-gradient(
@@ -1218,7 +1314,88 @@ input:focus-visible {
   }
 
   .stage-shell {
-    width: min(100%, 21rem);
+    width: min(100%, 23rem);
+    aspect-ratio: 0.9;
+  }
+
+  .intro-heading {
+    transform: translateY(-0.55rem);
+  }
+
+  .intro-visual {
+    width: calc(100% + 0.7rem);
+    margin-inline: -0.35rem;
+  }
+
+  .stage-card-result {
+    width: 92%;
+    height: 98%;
+  }
+
+  .stage-card-garment {
+    top: 49%;
+    width: 26%;
+    height: 31%;
+  }
+
+  .compare-handle {
+    width: 2.5rem;
+    height: 2.5rem;
+    gap: 0.34rem;
+  }
+
+  .compare-frame-hero .compare-handle {
+    width: 2.35rem;
+    height: 2.35rem;
+  }
+
+  .compare-arrow {
+    border-block-width: 0.27rem;
+  }
+
+  .compare-arrow-left {
+    border-right-width: 0.38rem;
+  }
+
+  .compare-arrow-right {
+    border-left-width: 0.38rem;
+  }
+
+  .processing-layout {
+    min-height: calc(100dvh - 76px);
+    justify-content: flex-start;
+    padding: 0.25rem 1.25rem 1.5rem;
+  }
+
+  .processing-visual {
+    width: 100%;
+    max-width: 38rem;
+    height: clamp(23rem, calc(100dvh - 28rem), 30rem);
+    margin-bottom: 0.35rem;
+  }
+
+  .processing-photo-person,
+  .processing-photo-product {
+    width: clamp(12.5rem, 38vw, 15.5rem);
+    height: clamp(19rem, 54vw, 23rem);
+  }
+
+  .processing-photo-person {
+    top: 1rem;
+    left: 0.5rem;
+  }
+
+  .processing-photo-product {
+    right: 0.5rem;
+    bottom: 1rem;
+  }
+
+  .processing-steps {
+    margin-top: 1.35rem;
+  }
+
+  .processing-time {
+    margin-top: 1rem;
   }
 
   .stage-status {
@@ -1293,12 +1470,23 @@ input:focus-visible {
   .result-layout {
     grid-template-areas:
       "copy visual"
+      "guidance visual"
       "actions visual";
     grid-template-columns: minmax(0, 0.92fr) minmax(28rem, 1.08fr);
     column-gap: clamp(3rem, 6vw, 6rem);
     row-gap: 1.75rem;
     align-content: center;
     padding: 1rem 3rem 4rem;
+  }
+
+  .result-drape {
+    top: 50%;
+    right: -13rem;
+    left: auto;
+    width: 56rem;
+    height: 42rem;
+    opacity: 0.15;
+    transform: translateY(-50%) rotate(-9deg);
   }
 
   .result-copy {
@@ -1315,8 +1503,14 @@ input:focus-visible {
     font-size: clamp(3.7rem, 5.6vw, 5rem);
   }
 
-  .result-description {
-    margin-inline: 0;
+  .result-guidance {
+    align-self: center;
+    margin: 0;
+    text-align: left;
+  }
+
+  .result-drag-hint {
+    text-align: left;
   }
 
   .result-actions {

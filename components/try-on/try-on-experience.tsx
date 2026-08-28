@@ -450,19 +450,24 @@ export function TryOnExperience() {
         {screen === "processing" && (
           <motion.section
             {...screenMotion}
-            className="relative z-10 mx-auto flex min-h-[calc(100dvh-90px)] w-full max-w-[65rem] flex-col items-center justify-center px-5 pb-16 text-center sm:px-8"
+            className="processing-layout relative z-10 mx-auto flex min-h-[calc(100dvh-90px)] w-full max-w-[65rem] flex-col items-center justify-center px-5 pb-16 text-center sm:px-8"
             key="processing"
             transition={{ duration: reducedMotion ? 0 : 0.45 }}
           >
             <div className="contents">
-              <div className="relative mb-10 flex h-56 w-72 items-center justify-center sm:h-64 sm:w-80">
+              <div
+                aria-hidden="true"
+                className="processing-drape"
+                key="processing-drape"
+              />
+              <div className="processing-visual relative flex items-center justify-center">
                 <motion.div
                   animate={
                     reducedMotion
                       ? undefined
                       : { rotate: [-5, -8, -5], y: [0, -6, 0] }
                   }
-                  className="absolute left-2 top-5 h-44 w-32 overflow-hidden rounded-[1.6rem] border border-[#fffaf1]/55 bg-[#d9cbb8] shadow-[0_16px_40px_rgba(67,40,22,0.12)] sm:h-52 sm:w-40"
+                  className="processing-photo-person absolute overflow-hidden rounded-[1.6rem] border border-[#fffaf1]/55 bg-[#d9cbb8] shadow-[0_16px_40px_rgba(67,40,22,0.12)]"
                   transition={{ duration: 4.5, repeat: Infinity }}
                 >
                   {photos.person?.previewUrl ? (
@@ -481,7 +486,7 @@ export function TryOnExperience() {
                       ? undefined
                       : { rotate: [6, 9, 6], y: [0, 7, 0] }
                   }
-                  className="absolute bottom-2 right-2 h-44 w-32 overflow-hidden rounded-[1.6rem] border border-[#fffaf1]/55 bg-[#c8a87d] shadow-[0_16px_40px_rgba(67,40,22,0.12)] sm:h-52 sm:w-40"
+                  className="processing-photo-product absolute overflow-hidden rounded-[1.6rem] border border-[#fffaf1]/55 bg-[#c8a87d] shadow-[0_16px_40px_rgba(67,40,22,0.12)]"
                   transition={{ duration: 5.2, repeat: Infinity }}
                 >
                   {photos.product?.previewUrl ? (
@@ -508,7 +513,7 @@ export function TryOnExperience() {
                     className="processing-scan-line"
                     transition={{
                       duration: 2.2,
-                      ease: "easeInOut",
+                      ease: "linear",
                       repeat: Infinity,
                     }}
                   />
@@ -562,7 +567,7 @@ export function TryOnExperience() {
                   );
                 })}
               </ol>
-              <div className="mt-6 flex items-center gap-2 text-xs text-[#827268]">
+              <div className="processing-time mt-6 flex items-center gap-2 text-xs text-[#827268]">
                 <Clock3 className="size-4" strokeWidth={1.6} />
                 Обычно это занимает несколько минут
               </div>
@@ -581,6 +586,11 @@ export function TryOnExperience() {
             }}
           >
             <div className="contents">
+              <div
+                aria-hidden="true"
+                className="result-drape"
+                key="result-drape"
+              />
               <div className="result-copy">
                 <div className="result-kicker">
                   <span>
@@ -591,15 +601,20 @@ export function TryOnExperience() {
                 <h1 className="font-display result-title">
                   Вот как вещь выглядит на тебе
                 </h1>
-                <p className="result-description">
-                  Сравни результат с исходным фото и сохрани образ, если он тебе
-                  подходит.
-                </p>
               </div>
 
               <div className="result-visual">
                 <CompareView after={resultUrl} before={beforeUrl} />
-                <p>Нажми в любом месте и проведи, чтобы сравнить</p>
+              </div>
+
+              <div className="result-guidance">
+                <p className="result-description">
+                  Сравни результат с исходным фото и сохрани образ, если он тебе
+                  подходит.
+                </p>
+                <p className="result-drag-hint">
+                  Нажми в любом месте и проведи, чтобы сравнить
+                </p>
               </div>
 
               <div className="result-actions">
