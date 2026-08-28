@@ -14,8 +14,8 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "LOOKSI — виртуальная примерка",
-  description: "Примерь образ по двум фотографиям за несколько минут.",
+  title: "LOOKSI — примерь образ до покупки",
+  description: "Персональная виртуальная примерка одежды по двум фотографиям.",
 };
 
 export default function RootLayout({

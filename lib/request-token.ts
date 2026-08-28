@@ -5,7 +5,10 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 function digest(requestId: string) {
   const secret = process.env.FAL_KEY;
   if (!secret) throw new Error("FAL_KEY is not configured");
-  return createHmac("sha256", secret).update(requestId).digest();
+  return createHmac("sha256", secret)
+    .update("looksi:try-on:")
+    .update(requestId)
+    .digest();
 }
 
 export function createRequestToken(requestId: string) {

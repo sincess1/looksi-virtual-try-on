@@ -1,0 +1,6 @@
+.env*
+.git
+.next
+coverage
+LOOKSI_CONTEXT.md
+node_modules

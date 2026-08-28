@@ -69,8 +69,12 @@ export async function pollTryOn(
 ) {
   for (let attempt = 0; attempt < 100; attempt += 1) {
     const response = await fetch(
-      `/api/try-on/${encodeURIComponent(requestId)}?token=${encodeURIComponent(token)}`,
-      { cache: "no-store", signal },
+      `/api/try-on/${encodeURIComponent(requestId)}`,
+      {
+        cache: "no-store",
+        headers: { "X-Request-Token": token },
+        signal,
+      },
     );
     const status = statusSchema.parse(await readJson(response));
     onStatus(status);

@@ -10,6 +10,21 @@ export const maxDuration = 60;
 
 const uploadLimit = 1_700_000;
 
+function allowedOrigin(request: Request) {
+  const origin = request.headers.get("origin");
+  if (!origin) return true;
+
+  try {
+    const host =
+      request.headers.get("x-forwarded-host")?.split(",")[0]?.trim() ||
+      request.headers.get("host") ||
+      new URL(request.url).host;
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
+}
+
 function errorResponse(error: string, status: number, retryAfter?: number) {
   const response = NextResponse.json({ error }, { status });
   response.headers.set("Cache-Control", "no-store");
@@ -33,6 +48,14 @@ async function validatedImage(
 }
 
 export async function POST(request: Request) {
+  if (!allowedOrigin(request)) {
+    return errorResponse("Запрос отклонён.", 403);
+  }
+
+  if (!request.headers.get("content-type")?.startsWith("multipart/form-data")) {
+    return errorResponse("Некорректный формат запроса.", 400);
+  }
+
   const retryAfter = rateLimit(requestIdentity(request));
   if (retryAfter) {
     return errorResponse(
@@ -84,7 +107,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error(
       "Virtual try-on request failed",
-      error instanceof Error ? error.message : "Unknown error",
+      error instanceof Error ? error.name : "UnknownError",
     );
     return errorResponse(
       "Не удалось запустить примерку. Попробуйте ещё раз.",

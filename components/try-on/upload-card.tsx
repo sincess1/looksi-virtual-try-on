@@ -1,4 +1,5 @@
 import { Check, ImagePlus, RefreshCw } from "lucide-react";
+import Image from "next/image";
 import type { ChangeEvent } from "react";
 
 export type PhotoSelection = {
@@ -11,6 +12,7 @@ type UploadCardProps = {
   index: string;
   title: string;
   description: string;
+  exampleSrc: string;
   selection?: PhotoSelection;
   onSelect: (file: File) => void;
 };
@@ -22,6 +24,7 @@ export function UploadCard({
   index,
   title,
   description,
+  exampleSrc,
   selection,
   onSelect,
 }: UploadCardProps) {
@@ -34,11 +37,12 @@ export function UploadCard({
   return (
     <label
       className="upload-card block cursor-pointer"
+      data-example={index}
       data-selected={Boolean(selection)}
     >
       <input
         accept={accept}
-        className="sr-only"
+        className="upload-file-input"
         onChange={handleChange}
         type="file"
       />
@@ -46,21 +50,32 @@ export function UploadCard({
       {selection?.previewUrl ? (
         <img alt={title} src={selection.previewUrl} />
       ) : (
-        <div className="flex h-full min-h-[inherit] flex-col items-center justify-center px-7 py-10 text-center">
-          <span className="mb-6 flex size-14 items-center justify-center rounded-2xl border border-[#d8c9b8] bg-[#fffaf1] text-[#9d6228] shadow-[0_10px_30px_rgba(84,48,18,0.09)]">
-            <ImagePlus className="size-6" strokeWidth={1.5} />
-          </span>
-          <span className="font-display text-[2rem] font-semibold leading-none text-[#2b1d15]">
-            {title}
-          </span>
-          <span className="mt-3 max-w-[18rem] text-sm leading-6 text-[#75685e]">
-            {selection?.isHeic ? "HEIC готов к обработке" : description}
-          </span>
-          {selection && (
-            <span className="mt-4 max-w-full truncate rounded-full border border-[#d8c9b8] bg-[#fffaf1]/80 px-3 py-1.5 text-xs font-semibold text-[#684b36]">
-              {selection.file.name}
+        <div className="upload-empty">
+          <div className="upload-example-visual">
+            <Image
+              alt=""
+              className="object-contain"
+              fill
+              sizes="(max-width: 768px) 48vw, 260px"
+              src={exampleSrc}
+            />
+          </div>
+          <div className="upload-empty-copy">
+            <span className="upload-icon">
+              <ImagePlus className="size-5" strokeWidth={1.5} />
             </span>
-          )}
+            <span className="font-display text-[1.8rem] font-semibold leading-none text-[#2b1d15]">
+              {title}
+            </span>
+            <span className="mt-3 text-sm leading-6 text-[#75685e]">
+              {selection?.isHeic ? "HEIC готов к обработке" : description}
+            </span>
+            {selection && (
+              <span className="mt-4 max-w-full truncate rounded-full border border-[#d8c9b8] bg-[#fffaf1]/80 px-3 py-1.5 text-xs font-semibold text-[#684b36]">
+                {selection.file.name}
+              </span>
+            )}
+          </div>
         </div>
       )}
 

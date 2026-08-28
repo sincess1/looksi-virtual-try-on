@@ -24,7 +24,7 @@ export async function GET(
   context: { params: Promise<{ requestId: string }> },
 ) {
   const { requestId } = await context.params;
-  const token = new URL(request.url).searchParams.get("token") ?? "";
+  const token = request.headers.get("x-request-token") ?? "";
 
   if (!requestIdSchema.safeParse(requestId).success) {
     return response({ error: "Запрос не найден." }, 404);
@@ -68,7 +68,7 @@ export async function GET(
   } catch (error) {
     console.error(
       "Virtual try-on status failed",
-      error instanceof Error ? error.message : "Unknown error",
+      error instanceof Error ? error.name : "UnknownError",
     );
     return response(
       { error: "Не удалось получить результат. Попробуйте ещё раз." },
