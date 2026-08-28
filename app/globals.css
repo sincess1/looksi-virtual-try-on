@@ -1,0 +1,330 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--cream);
+  --color-foreground: var(--ink);
+  --color-primary: var(--ink);
+  --color-primary-foreground: var(--cream-light);
+  --color-border: var(--line);
+  --color-ring: var(--amber);
+  --font-sans: var(--font-manrope);
+  --font-heading: var(--font-cormorant);
+}
+
+:root {
+  --cream: #f4eee3;
+  --cream-light: #fffaf1;
+  --paper: #fbf6ec;
+  --paper-strong: #fffdf8;
+  --ink: #261b14;
+  --muted: #75685e;
+  --line: rgba(72, 50, 34, 0.15);
+  --line-strong: rgba(72, 50, 34, 0.25);
+  --amber: #c8893a;
+  --amber-light: #edc480;
+  --amber-deep: #8e551c;
+  --rose: #b97a6c;
+  --shadow-soft: 0 24px 80px rgba(76, 47, 24, 0.12);
+  --shadow-card: 0 18px 55px rgba(60, 38, 22, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+  border-color: var(--line);
+}
+
+html {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-manrope), Arial, sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100dvh;
+  margin: 0;
+  overflow-x: hidden;
+  background:
+    radial-gradient(
+      circle at 8% 6%,
+      rgba(231, 180, 106, 0.2),
+      transparent 28rem
+    ),
+    radial-gradient(
+      circle at 92% 94%,
+      rgba(185, 122, 108, 0.12),
+      transparent 30rem
+    ),
+    var(--cream);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button,
+label,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+label:has(input:focus-visible),
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(200, 137, 58, 0.34);
+  outline-offset: 4px;
+}
+
+::selection {
+  background: rgba(200, 137, 58, 0.3);
+}
+
+.font-display {
+  font-family: var(--font-cormorant), Georgia, serif;
+}
+
+.ambient-field {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.ambient-dot {
+  --x: 50%;
+  --y: 50%;
+  --size: 8px;
+  --duration: 16s;
+  --delay: 0s;
+  --travel: 20px;
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: var(--size);
+  border: 1px solid rgba(154, 99, 35, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 248, 236, 0.5);
+  box-shadow: 0 0 calc(var(--size) * 3) rgba(207, 145, 66, 0.22);
+  animation: ambient-float var(--duration) ease-in-out var(--delay) infinite
+    alternate;
+  opacity: 0.72;
+  will-change: transform;
+}
+
+.ambient-dot:nth-child(3n) {
+  border-radius: 30%;
+  transform: rotate(45deg);
+}
+
+.ambient-dot:nth-child(4n) {
+  background: rgba(185, 122, 108, 0.22);
+}
+
+.ambient-dot:nth-child(5n) {
+  backdrop-filter: blur(6px);
+}
+
+.glass-panel {
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  background: rgba(255, 250, 241, 0.68);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(22px);
+}
+
+.stage-shell {
+  position: relative;
+  aspect-ratio: 0.94;
+  width: min(100%, 31rem);
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
+.stage-shell::before {
+  position: absolute;
+  inset: 12% 8% 8%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(232, 185, 113, 0.4),
+    rgba(232, 185, 113, 0)
+  );
+  filter: blur(26px);
+  content: "";
+}
+
+.stage-card {
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 2rem;
+  background: rgba(255, 252, 246, 0.82);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(18px);
+  transform-style: preserve-3d;
+}
+
+.stage-card::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 34%,
+    rgba(255, 255, 255, 0.52) 48%,
+    transparent 62%
+  );
+  content: "";
+  transform: translateX(-130%);
+  animation: stage-sheen 6.5s ease-in-out infinite;
+}
+
+.hero-orbit {
+  animation: orbit-breathe 5s ease-in-out infinite;
+  box-shadow:
+    0 0 0 14px rgba(255, 250, 241, 0.18),
+    0 0 0 28px rgba(200, 137, 58, 0.07),
+    0 22px 48px rgba(88, 52, 21, 0.22);
+}
+
+.upload-card {
+  position: relative;
+  min-height: 18rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 1.75rem;
+  background: rgba(255, 252, 246, 0.72);
+  transition:
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms ease;
+}
+
+.upload-card:hover {
+  border-color: rgba(200, 137, 58, 0.45);
+  box-shadow: 0 18px 40px rgba(76, 47, 24, 0.1);
+  transform: translateY(-2px);
+}
+
+.upload-card[data-selected="true"] {
+  border-color: rgba(200, 137, 58, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(200, 137, 58, 0.12);
+}
+
+.upload-card img,
+.compare-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.processing-ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(200, 137, 58, 0.24);
+  border-radius: 999px;
+  animation: ring-turn 8s linear infinite;
+}
+
+.processing-ring::after {
+  position: absolute;
+  top: 9%;
+  left: 9%;
+  width: 0.72rem;
+  height: 0.72rem;
+  border-radius: 999px;
+  background: var(--amber-light);
+  box-shadow: 0 0 22px rgba(237, 196, 128, 0.9);
+  content: "";
+}
+
+.compare-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2rem;
+  background: #ded4c5;
+  box-shadow: var(--shadow-card);
+}
+
+.compare-after {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.compare-after img {
+  position: absolute;
+  inset: 0;
+}
+
+@keyframes ambient-float {
+  from {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  to {
+    translate: calc(var(--travel) * 0.65) calc(var(--travel) * -1);
+    rotate: 48deg;
+  }
+}
+
+@keyframes stage-sheen {
+  0%,
+  46% {
+    transform: translateX(-130%);
+  }
+  72%,
+  100% {
+    transform: translateX(130%);
+  }
+}
+
+@keyframes orbit-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes ring-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    background:
+      radial-gradient(
+        circle at 8% 4%,
+        rgba(231, 180, 106, 0.18),
+        transparent 19rem
+      ),
+      var(--cream);
+  }
+
+  .stage-shell {
+    width: min(100%, 23rem);
+  }
+
+  .upload-card {
+    min-height: 14.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
